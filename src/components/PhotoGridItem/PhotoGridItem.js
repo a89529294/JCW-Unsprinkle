@@ -1,11 +1,27 @@
-import React from 'react';
-import styled from 'styled-components/macro';
+import React from "react";
+import styled from "styled-components/macro";
 
 const PhotoGridItem = ({ id, src, alt, tags }) => {
   return (
     <article>
       <Anchor href={`/photos/${id}`}>
-        <Image src={src} />
+        <picture>
+          <source
+            type="image/avif"
+            srcSet={`${src} 1x,${src.replace(
+              ".jpg",
+              "@2x.avif"
+            )} 2x, ${src.replace(".jpg", "@3x.avif")} 3x`}
+          />
+          <source
+            type="image/jpeg"
+            srcSet={`${src} 1x,${src.replace(
+              ".jpg",
+              "@2x.jpg"
+            )} 2x, ${src.replace(".jpg", "@3x.jpg")} 3x`}
+          />
+          <Image src={src} />
+        </picture>
       </Anchor>
       <Tags>
         {tags.map((tag) => (
@@ -28,20 +44,27 @@ const Image = styled.img`
   height: 300px;
   border-radius: 2px;
   margin-bottom: 8px;
-`;
-
-const Tags = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  object-fit: cover;
 `;
 
 const Tag = styled.li`
+  display: inline-block;
   padding: 4px 8px;
   background: var(--color-gray-300);
   font-size: 0.875rem;
   font-weight: 475;
   color: var(--color-gray-800);
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+`;
+
+const Tags = styled.ul`
+  white-space: nowrap;
+  overflow: hidden;
+  /* text-overflow: ellipsis; */
+  ${Tag}:not(:first-of-type) {
+    margin-left: 8px;
+  }
 `;
 
 export default PhotoGridItem;
